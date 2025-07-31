@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -10,6 +9,14 @@
             font-family: sans-serif;
             margin: 10px;
             background: #f9f9f9;
+        }
+        .logo-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .logo-container img {
+            max-width: 200px;
+            height: auto;
         }
         h2 {
             text-align: center;
@@ -69,6 +76,9 @@
     </style>
 </head>
 <body>
+    <div class="logo-container">
+        <img src="https://www.qiagen.com/-/media/project/qiagen/qiagen-logo.svg" alt="Qiagen Logo">
+    </div>
     <h2>Qiagen Customer Contract</h2>
     <input type="text" id="searchInput" placeholder="🔍 พิมพ์คำค้นหา แล้วกด Enter หรือคลิกปุ่มค้นหา">
     <button onclick="filterTable()">🔍 ค้นหา</button>
