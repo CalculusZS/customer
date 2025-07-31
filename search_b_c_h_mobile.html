@@ -140,3 +140,93 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ค้นหาข้อมูลจาก Google Sheet</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: sans-serif; margin: 10px; background: #f9f9f9; }
+    input[type="text"], button {
+      padding: 8px; margin: 4px 0; width: 100%; box-sizing: border-box; font-size: 16px;
+    }
+    button { background: #4CAF50; color: white; border: none; }
+    table { border-collapse: collapse; width: 100%; background: white; margin-top: 10px; }
+    th, td {
+      padding: 8px; border: 1px solid #ddd; font-size: 14px;
+    }
+    th.hidden, td.hidden { display: none; }
+    th { background: #eee; }
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      thead tr { display: none; }
+      td { border: none; position: relative; padding-left: 50%; text-align: right; }
+      td:before { position: absolute; top: 8px; left: 8px; content: attr(data-label); text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <h2>ค้นหาข้อมูลจาก Google Sheet</h2>
+  <input type="text" id="searchInput" placeholder="🔍 พิมพ์คำค้นหา...">
+  <button onclick="filterTable()">🔍 ค้นหา</button>
+  <div style="overflow-x:auto;">
+    <table id="dataTable">
+      <thead id="tableHead"></thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+    let data = [], headers = [];
+
+    async function fetchCSV() {
+      const res = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vReK1auMBXGO9QIj41JHCk6iV5UTfhFeO7_-7xbgy6yek2-k087jFwXusi8X0BJOi1TE2b_tHXDmine/pub?output=csv");
+      const text = await res.text();
+      const lines = text.split('\\n').filter(l => l.trim());
+      headers = lines[0].split(',');
+      data = lines.slice(1).map(row => row.split(','));
+      renderTable(data);
+    }
+
+    function renderTable(rows) {
+      const thead = document.getElementById("tableHead");
+      const tbody = document.getElementById("tableBody");
+      thead.innerHTML = ""; tbody.innerHTML = "";
+
+      const tr = document.createElement("tr");
+      headers.forEach((head, i) => {
+        const th = document.createElement("th");
+        if (i === 0) th.classList.add("hidden");
+        th.textContent = head;
+        tr.appendChild(th);
+      });
+      thead.appendChild(tr);
+
+      rows.forEach(row => {
+        const tr = document.createElement("tr");
+        row.forEach((cell, i) => {
+          const td = document.createElement("td");
+          if (i === 0) td.classList.add("hidden");
+          td.setAttribute("data-label", headers[i]);
+          td.textContent = cell;
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterTable() {
+      const term = document.getElementById("searchInput").value.trim().toLowerCase();
+      const filtered = data.filter(row => row.some(cell => cell.toLowerCase().includes(term)));
+      renderTable(filtered);
+    }
+
+    document.getElementById("searchInput").addEventListener("keypress", e => {
+      if (e.key === "Enter") filterTable();
+    });
+
+    fetchCSV();
+  </script>
+</body>
+</html>
