@@ -1,152 +1,105 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <title>QAIGEN Customer Contract</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: sans-serif;
-            margin: 10px;
-            background: #f9f9f9;
-        }
-        .logo-container {
-            text-align: center;
-            margin-top: 10px;
-        }
-        .logo-container img {
-            max-width: 200px;
-            height: auto;
-        }
-        h2 {
-            text-align: center;
-        }
-        input[type="text"] {
-            padding: 6px;
-            margin: 4px 0;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        button {
-            padding: 8px 16px;
-            margin: 10px 0;
-            width: 100%;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            font-size: 16px;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 10px;
-            background: white;
-        }
-        th, td {
-            text-align: left;
-            padding: 8px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        @media (max-width: 600px) {
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-            thead tr {
-                display: none;
-            }
-            td {
-                border: none;
-                position: relative;
-                padding-left: 50%;
-                text-align: right;
-            }
-            td:before {
-                position: absolute;
-                top: 8px;
-                left: 8px;
-                white-space: nowrap;
-                content: attr(data-label);
-                text-align: left;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Qiagen Customer Contract</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <div class="logo-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Qiagen_Logo.svg/1200px-Qiagen_Logo.svg.png" alt="Qiagen Logo">
-    </div>
-    <h2>QIAGEN Customer Contract</h2>
-    <input type="text" id="searchInput" placeholder="🔍 พิมพ์คำค้นหา แล้วกด Enter หรือคลิกปุ่มค้นหา">
-    <button onclick="filterTable()">🔍 ค้นหา</button>
-    <div style="overflow-x:auto;">
-        <table id="dataTable">
-            <thead id="tableHead"></thead>
-            <tbody id="tableBody"></tbody>
-        </table>
-    </div>
+<body class="bg-gray-100 text-gray-800 font-sans p-4">
 
-    <script>
-        let data = [];
-        let headers = [];
+  <!-- Logo -->
+  <div class="flex justify-center mb-4">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Qiagen_Logo.svg/1200px-Qiagen_Logo.svg.png" alt="Qiagen Logo" class="h-16">
+  </div>
 
-        async function fetchCSV() {
-            const response = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRlLJ5xXk8ot9DORm2sWsrOiKqvs1sH51ZEKKV1fjD4_pTA0Xt8q3InH5K649eklyu-vTOfVkueaO0p/pub?output=csv");
-            const csvText = await response.text();
-            parseCSV(csvText);
-        }
+  <!-- Heading -->
+  <h2 class="text-2xl font-semibold text-center mb-6">Qiagen Customer Contract</h2>
 
-        function parseCSV(csv) {
-            const lines = csv.split("\n").filter(line => line.trim() !== "");
-            headers = lines[0].split(",");
-            data = lines.slice(1).map(line => line.split(","));
-            generateTable(data);
-        }
+  <!-- Search bar -->
+  <div class="flex flex-col sm:flex-row gap-2 items-center justify-center mb-4">
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="🔍 พิมพ์คำค้นหา แล้วกด Enter หรือกดปุ่มค้นหา"
+      class="w-full sm:w-1/2 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+    />
+    <button
+      onclick="filterTable()"
+      class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow"
+    >
+      🔍 ค้นหา
+    </button>
+  </div>
 
-        function generateTable(displayData) {
-            const thead = document.getElementById("tableHead");
-            const tbody = document.getElementById("tableBody");
-            thead.innerHTML = "";
-            tbody.innerHTML = "";
+  <!-- Table -->
+  <div class="overflow-x-auto bg-white rounded-lg shadow">
+    <table class="min-w-full divide-y divide-gray-200" id="dataTable">
+      <thead id="tableHead" class="bg-gray-100"></thead>
+      <tbody id="tableBody" class="divide-y divide-gray-200"></tbody>
+    </table>
+  </div>
 
-            const headerRow = document.createElement("tr");
-            headers.forEach(header => {
-                const th = document.createElement("th");
-                th.innerText = header;
-                headerRow.appendChild(th);
-            });
-            thead.appendChild(headerRow);
+  <!-- Script -->
+  <script>
+    let data = [];
+    let headers = [];
 
-            displayData.forEach(row => {
-                const tr = document.createElement("tr");
-                row.forEach((cell, index) => {
-                    const td = document.createElement("td");
-                    td.setAttribute("data-label", headers[index]);
-                    td.innerText = cell;
-                    tr.appendChild(td);
-                });
-                tbody.appendChild(tr);
-            });
-        }
+    async function fetchCSV() {
+      const response = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vRlLJ5xXk8ot9DORm2sWsrOiKqvs1sH51ZEKKV1fjD4_pTA0Xt8q3InH5K649eklyu-vTOfVkueaO0p/pub?output=csv");
+      const csvText = await response.text();
+      parseCSV(csvText);
+    }
 
-        function filterTable() {
-            const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
-            const filtered = data.filter(row =>
-                row.some(cell => cell.toLowerCase().includes(searchTerm))
-            );
-            generateTable(filtered);
-        }
+    function parseCSV(csv) {
+      const lines = csv.split("\n").filter(line => line.trim() !== "");
+      headers = lines[0].split(",");
+      data = lines.slice(1).map(line => line.split(","));
+      generateTable(data);
+    }
 
-        document.getElementById("searchInput").addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-                filterTable();
-            }
+    function generateTable(displayData) {
+      const thead = document.getElementById("tableHead");
+      const tbody = document.getElementById("tableBody");
+      thead.innerHTML = "";
+      tbody.innerHTML = "";
+
+      const headerRow = document.createElement("tr");
+      headers.forEach(header => {
+        const th = document.createElement("th");
+        th.innerText = header;
+        th.className = "px-4 py-2 text-left text-sm font-medium text-gray-700";
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+
+      displayData.forEach(row => {
+        const tr = document.createElement("tr");
+        row.forEach((cell, index) => {
+          const td = document.createElement("td");
+          td.innerText = cell;
+          td.className = "px-4 py-2 text-sm text-gray-600";
+          tr.appendChild(td);
         });
+        tbody.appendChild(tr);
+      });
+    }
 
-        fetchCSV();
-    </script>
+    function filterTable() {
+      const searchTerm = document.getElementById("searchInput").value.trim().toLowerCase();
+      const filtered = data.filter(row =>
+        row.some(cell => cell.toLowerCase().includes(searchTerm))
+      );
+      generateTable(filtered);
+    }
+
+    document.getElementById("searchInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        filterTable();
+      }
+    });
+
+    fetchCSV();
+  </script>
 </body>
 </html>
