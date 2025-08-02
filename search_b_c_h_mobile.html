@@ -5,7 +5,24 @@
   <title>Qiagen Customer Contract</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- 🔐 ระบบ Password Protection -->
+  <script>
+    const correctPassword = "qiagen2025"; // ✅ เปลี่ยนรหัสผ่านได้ตรงนี้
+
+    let entered = sessionStorage.getItem("authenticated");
+    if (entered !== "true") {
+      let password = prompt("กรุณาใส่รหัสผ่านเพื่อเข้าใช้งาน:");
+      if (password !== correctPassword) {
+        alert("รหัสผ่านไม่ถูกต้อง. ระบบจะปิดหน้าต่าง.");
+        window.location.href = "about:blank"; // หรือเปลี่ยน URL อื่นได้
+      } else {
+        sessionStorage.setItem("authenticated", "true");
+      }
+    }
+  </script>
 </head>
+
 <body class="bg-gray-100 text-gray-800 font-sans p-4">
 
   <!-- Logo -->
@@ -28,7 +45,7 @@
       onclick="filterTable()"
       class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow"
     >
-      🔍 ค้นหา
+      🔎 ค้นหา
     </button>
   </div>
 
@@ -101,19 +118,5 @@
 
     fetchCSV();
   </script>
-  <script>
-  const correctPassword = "qiagen2025"; 
-
-  let entered = sessionStorage.getItem("authenticated");
-  if (entered !== "true") {
-    let password = prompt("กรุณาใส่รหัสผ่านเพื่อเข้าใช้งาน:");
-    if (password !== correctPassword) {
-      alert("รหัสผ่านไม่ถูกต้อง. ระบบจะปิดหน้าต่าง.");
-      window.location.href = "about:blank"; 
-    } else {
-      sessionStorage.setItem("authenticated", "true");
-    }
-  }
-</script>
 </body>
 </html>
