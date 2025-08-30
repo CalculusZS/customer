@@ -12,8 +12,17 @@
   <div id="passwordScreen" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-75 z-50">
     <div class="bg-white rounded-lg p-6 shadow-md w-80 text-center">
       <h2 class="text-xl font-semibold mb-4">🔒 กรุณาใส่รหัสผ่าน</h2>
-      <input type="password" id="passwordInput" placeholder="Password" class="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" />
-      <button onclick="checkPassword()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">เข้าสู่ระบบ</button>
+      <input 
+        type="password" 
+        id="passwordInput" 
+        placeholder="Password" 
+        class="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500" 
+      />
+      <button 
+        onclick="checkPassword()" 
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md">
+        เข้าสู่ระบบ
+      </button>
       <p id="errorText" class="text-red-500 text-sm mt-2 hidden">รหัสผ่านไม่ถูกต้อง</p>
     </div>
   </div>
@@ -76,6 +85,18 @@
       document.getElementById("mainContent").classList.remove("hidden");
     }
 
+    // ✅ กด Enter เพื่อตรวจรหัสผ่าน
+    document.getElementById("passwordInput").addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        checkPassword();
+      }
+    });
+
+    // ✅ ซ่อนข้อความ error เมื่อพิมพ์ใหม่
+    document.getElementById("passwordInput").addEventListener("input", () => {
+      document.getElementById("errorText").classList.add("hidden");
+    });
+
     // CSV Table Logic
     let data = [];
     let headers = [];
@@ -112,8 +133,19 @@
         const tr = document.createElement("tr");
         row.forEach((cell, index) => {
           const td = document.createElement("td");
-          td.innerText = cell;
           td.className = "px-4 py-2 text-sm text-gray-600";
+
+          // ✅ คอลัมน์ K (index 10) แสดงรูปภาพ
+          if (index === 10 && cell.startsWith("http")) {
+            const img = document.createElement("img");
+            img.src = cell.trim();
+            img.alt = "image";
+            img.className = "h-16 w-auto rounded-md shadow";
+            td.appendChild(img);
+          } else {
+            td.innerText = cell;
+          }
+
           tr.appendChild(td);
         });
         tbody.appendChild(tr);
@@ -138,4 +170,3 @@
   </script>
 </body>
 </html>
-
