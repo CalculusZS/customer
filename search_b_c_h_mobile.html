@@ -135,13 +135,14 @@
           const td = document.createElement("td");
           td.className = "px-4 py-2 text-sm text-gray-600";
 
-          // ✅ คอลัมน์ K (index 10) แสดงรูปภาพ
-          if (index === 10 && cell.startsWith("http")) {
-            const img = document.createElement("img");
-            img.src = cell.trim();
-            img.alt = "image";
-            img.className = "h-16 w-auto rounded-md shadow";
-            td.appendChild(img);
+          // ✅ คอลัมน์ K (index 10) แสดงเป็นลิงก์
+          if (index === 10 && cell.trim() !== "") {
+            const a = document.createElement("a");
+            a.href = cell.trim();
+            a.innerText = "เปิดลิงก์";
+            a.target = "_blank";
+            a.className = "text-blue-600 hover:underline";
+            td.appendChild(a);
           } else {
             td.innerText = cell;
           }
